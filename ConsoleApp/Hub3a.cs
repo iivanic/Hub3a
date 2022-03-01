@@ -1,5 +1,7 @@
 ﻿using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
+using MigraDocCore;
+using MigraDocCore.DocumentObjectModel;
 using PdfSharpCore.Pdf.IO;
 using SharpPdf417;
 using SixLabors.ImageSharp;
@@ -111,13 +113,13 @@ namespace ConsoleApp {
             Stream ret = new MemoryStream ();
 
             //File dimentions - Width = 17 inches, Height - 11 inches (Tabloid Format)
-            PdfDocument pdfDocument = PdfReader.Open (@"Pdf/hub-3a.pdf", PdfDocumentOpenMode.Modify);
+            PdfDocument pdfDocument = PdfReader.Open(@"Pdf/hub-3a.pdf", PdfDocumentOpenMode.Modify);
 
             PdfPage page = pdfDocument.Pages[0];
 
             var gfx = XGraphics.FromPdfPage (page);
-
-            XPdfFontOptions options = new XPdfFontOptions (PdfFontEncoding.Unicode);
+            XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.Unicode);
+            // no options to embed fonts in PDFSharpCore, seems to work automaticallz
 
             var font = new XFont ("OpenSans", 10, XFontStyle.Bold, options);
 
@@ -200,7 +202,7 @@ namespace ConsoleApp {
 
             //Širina barkoda iznosi 58 mm. Visina barkoda ovisi o koliĉini i
             //vrsti podataka, ali ne smije biti veća od 26 mm(sa podruĉjima tišine).
-            int dpi = 300;
+            int dpi = 150;
             double inchesW = 5.8 * 2.54;
             //           double inchesH = 1.2 * 2.54;
             var imgW = inchesW * dpi;

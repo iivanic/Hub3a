@@ -19,21 +19,11 @@ using
     (var process = Process.Start(
     new ProcessStartInfo
     {
-        FileName = "test.pdf"
+        FileName = barCode
         ,UseShellExecute = true
     })
     )
 {
    
 }
-/* using
-    (var process = Process.Start(
-    new ProcessStartInfo
-    {
-        FileName = barCode,
-        UseShellExecute = true
-    })
-    )
-{
 
-} */
