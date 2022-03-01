@@ -1,17 +1,19 @@
-﻿using PdfSharpCore.Drawing;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.Extensions.FileProviders;
+using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 using ZXing;
 using ZXing.Common;
 using ZXing.Rendering;
 
-namespace ConsoleApp {
-    //Generiram PDF417 2D BAR-KOD prema HUB3a standardu.
+namespace Hub3a
+{
+    //Generira PDF417 2D BAR-KOD prema HUB3a standardu.
 
     public class Hub3a {
         int ERROR_CORRECTION_LEVEL = 2;
@@ -123,8 +125,11 @@ namespace ConsoleApp {
         public Stream DajPDFUplatnicu () {
             Stream ret = new MemoryStream ();
 
+            var embeddedProvider = new EmbeddedFileProvider (Assembly.GetExecutingAssembly ());
+            var reader = embeddedProvider.GetFileInfo ("Pdf.hub-3a.pdf").CreateReadStream ();
+
             //File dimentions - Width = 17 inches, Height - 11 inches (Tabloid Format)
-            PdfDocument pdfDocument = PdfReader.Open (@"Pdf/hub-3a.pdf", PdfDocumentOpenMode.Modify);
+            PdfDocument pdfDocument = PdfReader.Open (reader, PdfDocumentOpenMode.Modify);
 
             PdfPage page = pdfDocument.Pages[0];
 
