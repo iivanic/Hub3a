@@ -112,12 +112,12 @@ namespace Hub3a {
                 SifraNamjene + "\n" +
                 Opis + "\n";
         }
-        public void DajPDFUplatnicu (string pdfFilePath) {
+        public async void DajPDFUplatnicu (string pdfFilePath) {
             if (System.IO.File.Exists (pdfFilePath))
                 System.IO.File.Delete (pdfFilePath);
 
             using (FileStream outputFileStream = new FileStream (pdfFilePath, FileMode.Create)) {
-                DajPDFUplatnicu ().CopyTo (outputFileStream);
+                await DajPDFUplatnicu ().CopyToAsync (outputFileStream);
             }
 
         }
@@ -231,12 +231,12 @@ namespace Hub3a {
             ret.Position = 0;; //Fix bug PdfSharpCore 
             return ret;
         }
-        public void DajBarKodPNG (string barCodePNGFilePath) {
+        public async void DajBarKodPNG (string barCodePNGFilePath) {
             if (System.IO.File.Exists (barCodePNGFilePath))
-                System.IO.File.Delete (barCodePNGFilePath);
+             System.IO.File.Delete (barCodePNGFilePath);
 
             using (FileStream outputFileStream = new FileStream (barCodePNGFilePath, FileMode.Create)) {
-                DajBarKodPNG ().CopyTo (outputFileStream);
+               await DajBarKodPNG ().CopyToAsync (outputFileStream);
             }
         }
         public ZXing.Rendering.PixelData DajBarKodPixelData (int imgW, int imgH) {
@@ -277,6 +277,13 @@ namespace Hub3a {
             ZXing.Rendering.SvgRenderer.SvgImage ret = barcodeWriter.Write (GetBarCodeText ());
 
             return ret.Content;
+
+        }
+        public async void DajBarKodSVG (string barCodeSVGFilePath) {
+            if (System.IO.File.Exists (barCodeSVGFilePath))
+                System.IO.File.Delete (barCodeSVGFilePath);
+
+            await File.WriteAllTextAsync (barCodeSVGFilePath, DajBarKodSVG ());
 
         }
     }
