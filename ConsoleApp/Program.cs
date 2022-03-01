@@ -8,8 +8,8 @@ string text =
 
 Hub3a.Hub3a hub = new Hub3a.Hub3a (text);
 
-string fileName = "test.pdf";
-hub.DajPDFUplatnicu (fileName);
+string fileName = "test.png";
+hub.DajBarKodPNG(fileName);
 using
     (var process = Process.Start (
         new ProcessStartInfo {

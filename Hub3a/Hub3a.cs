@@ -228,7 +228,7 @@ namespace Hub3a {
                 BitDepth = PngBitDepth.Bit1,
                     ColorType = PngColorType.Grayscale
             });
-
+            ret.Position = 0;; //Fix bug PdfSharpCore 
             return ret;
         }
         public void DajBarKodPNG (string barCodePNGFilePath) {
