@@ -13,12 +13,13 @@ string text =
 
 Hub3a hub = new Hub3a(text);
 
-string barCode = "";
+string barCode = "test.pdf";
+hub.DajPDFUplatnicu(barCode);
 using
     (var process = Process.Start(
     new ProcessStartInfo
     {
-        FileName = hub.DajPDFUplatnicu(out barCode)
+        FileName = "test.pdf"
         ,UseShellExecute = true
     })
     )
