@@ -117,7 +117,7 @@ namespace ConsoleApp {
 
             var gfx = XGraphics.FromPdfPage (page);
 
-            XPdfFontOptions options = new XPdfFontOptions (PdfFontEncoding.WinAnsi);
+            XPdfFontOptions options = new XPdfFontOptions (PdfFontEncoding.Unicode);
 
             var font = new XFont ("OpenSans", 10, XFontStyle.Bold, options);
 
