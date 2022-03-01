@@ -83,6 +83,7 @@ namespace ConsoleApp
 
         public Hub3a(string text)
         {
+            PdfSharpCore.Fonts.GlobalFontSettings.FontResolver =  new FontResolver();
             this.barCodeText = text;
 
             string[] t = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
@@ -109,6 +110,8 @@ namespace ConsoleApp
         }
         public string DajPDFUplatnicu(out string barCodePng)
         {
+
+
             //File dimentions - Width = 17 inches, Height - 11 inches (Tabloid Format)
             PdfDocument pdfDocument = PdfReader.Open(@"Pdf/hub-3a.pdf", PdfDocumentOpenMode.Modify);
 

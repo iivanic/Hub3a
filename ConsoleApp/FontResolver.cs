@@ -16,7 +16,7 @@ namespace ConsoleApp
             {
                 using (var ms = new MemoryStream())
                 {
-                    using (var fs = File.Open("Fonrs/" + faceName, FileMode.Open))
+                    using (var fs = File.Open("Fonts/" + faceName, FileMode.Open))
                     {
                         fs.CopyTo(ms);
                         ms.Position = 0;
