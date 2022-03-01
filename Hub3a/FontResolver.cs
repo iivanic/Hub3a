@@ -4,8 +4,7 @@ using System.Reflection;
 using Microsoft.Extensions.FileProviders;
 using PdfSharpCore.Fonts;
 
-namespace Hub3a
-{
+namespace Hub3a {
     //This implementation is obviously not very good --> Though it should be enough for everyone to implement their own.
     public class FontResolver : IFontResolver {
         public string DefaultFontName => "OpenSans";

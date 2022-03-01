@@ -11,8 +11,7 @@ using ZXing;
 using ZXing.Common;
 using ZXing.Rendering;
 
-namespace Hub3a
-{
+namespace Hub3a {
     //Generira PDF417 2D BAR-KOD prema HUB3a standardu.
 
     public class Hub3a {
@@ -139,67 +138,67 @@ namespace Hub3a
 
             var font = new XFont ("OpenSans", 10, XFontStyle.Bold, options);
 
-           var pomX = -1;
-            var pomY = -1.1; 
-           gfx.DrawString (PlatiteljPrvaLinija, font, XBrushes.Black, new XRect (40+pomX, 45+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString (PlatiteljDrugaLinija, font, XBrushes.Black, new XRect (40+pomX, 60+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString (PlatiteljTrecaLinija, font, XBrushes.Black, new XRect (40+pomX, 75+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            var pomX = -1;
+            var pomY = -1.1;
+            gfx.DrawString (PlatiteljPrvaLinija, font, XBrushes.Black, new XRect (40 + pomX, 45 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString (PlatiteljDrugaLinija, font, XBrushes.Black, new XRect (40 + pomX, 60 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString (PlatiteljTrecaLinija, font, XBrushes.Black, new XRect (40 + pomX, 75 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
 
-            gfx.DrawString (PrimateljPrvaLinija, font, XBrushes.Black, new XRect (40+pomX, 120+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString (PrimateljDrugaLinija, font, XBrushes.Black, new XRect (40+pomX, 135+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString (PrimateljTrecaLinija, font, XBrushes.Black, new XRect (40+pomX, 150+pomY, page.Width, page.Height), XStringFormats.TopLeft);
- 
+            gfx.DrawString (PrimateljPrvaLinija, font, XBrushes.Black, new XRect (40 + pomX, 120 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString (PrimateljDrugaLinija, font, XBrushes.Black, new XRect (40 + pomX, 135 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString (PrimateljTrecaLinija, font, XBrushes.Black, new XRect (40 + pomX, 150 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+
             int cnt = 0;
             foreach (char c in ValutaPlacanja.ToCharArray ()) {
-                gfx.DrawString (ValutaPlacanja.Substring (cnt, 1), font, XBrushes.Black, new XRect (239+pomX + (cnt * 9.56), 37+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString (ValutaPlacanja.Substring (cnt, 1), font, XBrushes.Black, new XRect (239 + pomX + (cnt * 9.56), 37 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
                 cnt++;
 
             }
 
             cnt = 0;
             foreach (char c in Iznos.ToCharArray ()) {
-                gfx.DrawString (Iznos.Substring (cnt, 1), font, XBrushes.Black, new XRect (296 +pomX+ (cnt * 9.56), 37 +pomY, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString (Iznos.Substring (cnt, 1), font, XBrushes.Black, new XRect (296 + pomX + (cnt * 9.56), 37 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
                 cnt++;
 
             }
 
             cnt = 0;
             foreach (char c in PrimateljIBAN.ToCharArray ()) {
-                gfx.DrawString (PrimateljIBAN.Substring (cnt, 1), font, XBrushes.Black, new XRect (239+pomX + (cnt * 9.56), 94+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString (PrimateljIBAN.Substring (cnt, 1), font, XBrushes.Black, new XRect (239 + pomX + (cnt * 9.56), 94 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
                 cnt++;
 
             }
 
             cnt = 0;
             foreach (char c in Model.ToCharArray ()) {
-                gfx.DrawString (Model.Substring (cnt, 1), font, XBrushes.Black, new XRect (172 +pomX+ (cnt * 9.56), 117+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString (Model.Substring (cnt, 1), font, XBrushes.Black, new XRect (172 + pomX + (cnt * 9.56), 117 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
                 cnt++;
 
             }
 
             cnt = 0;
             foreach (char c in PozivNaBroj.ToCharArray ()) {
-                gfx.DrawString (PozivNaBroj.Substring (cnt, 1), font, XBrushes.Black, new XRect (230+pomX + (cnt * 9.56), 117+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString (PozivNaBroj.Substring (cnt, 1), font, XBrushes.Black, new XRect (230 + pomX + (cnt * 9.56), 117 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
                 cnt++;
 
             }
 
             cnt = 0;
             foreach (char c in SifraNamjene.ToCharArray ()) {
-                gfx.DrawString (SifraNamjene.Substring (cnt, 1), font, XBrushes.Black, new XRect (172 +pomX+ (cnt * 9.56), 143+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString (SifraNamjene.Substring (cnt, 1), font, XBrushes.Black, new XRect (172 + pomX + (cnt * 9.56), 143 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
                 cnt++;
 
             }
 
-            gfx.DrawString (Opis, font, XBrushes.Black, new XRect (258+pomX, 132+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString (Opis, font, XBrushes.Black, new XRect (258 + pomX, 132 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
 
             var fontSmall = new XFont ("OpenSans", 8, XFontStyle.Bold, options);
 
-            gfx.DrawString ($"{ValutaPlacanja} {int.Parse(Iznos) / 100f}", fontSmall, XBrushes.Black, new XRect (458+pomX, 41+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString ($"{PlatiteljPrvaLinija}", fontSmall, XBrushes.Black, new XRect (458+pomX, 58+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString ($"{PrimateljIBAN}", fontSmall, XBrushes.Black, new XRect (458+pomX, 98+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString ($"{Model} {PozivNaBroj}", fontSmall, XBrushes.Black, new XRect (458+pomX, 120.5+pomY, page.Width, page.Height), XStringFormats.TopLeft);
-            gfx.DrawString ($"{Opis}", fontSmall, XBrushes.Black, new XRect (458+pomX, 139+pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString ($"{ValutaPlacanja} {int.Parse(Iznos) / 100f}", fontSmall, XBrushes.Black, new XRect (458 + pomX, 41 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString ($"{PlatiteljPrvaLinija}", fontSmall, XBrushes.Black, new XRect (458 + pomX, 58 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString ($"{PrimateljIBAN}", fontSmall, XBrushes.Black, new XRect (458 + pomX, 98 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString ($"{Model} {PozivNaBroj}", fontSmall, XBrushes.Black, new XRect (458 + pomX, 120.5 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString ($"{Opis}", fontSmall, XBrushes.Black, new XRect (458 + pomX, 139 + pomY, page.Width, page.Height), XStringFormats.TopLeft);
 
             //  bar code
             Stream bc = DajBarKodPNG ();
