@@ -1,84 +1,84 @@
 ﻿using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
-using MigraDocCore;
-using MigraDocCore.DocumentObjectModel;
 using PdfSharpCore.Pdf.IO;
-using SharpPdf417;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using ZXing;
+using ZXing.Common;
+using ZXing.Rendering;
 
 namespace ConsoleApp {
     //Generiram PDF417 2D BAR-KOD prema HUB3a standardu.
 
     public class Hub3a {
-        string barCodeText = "";
+        int ERROR_CORRECTION_LEVEL = 2;
         #region props
         /// <summary>
         /// Max length 8
         /// </summary>
-        public string Zaglavlje { get; }
+        public string Zaglavlje { get; } = "HRVHUB30";
         /// <summary>
         /// Max length 3
         /// </summary>
-        public string ValutaPlacanja { get; }
+        public string ValutaPlacanja { get; } = "HRK";
         /// <summary>
         /// Max length 15
         /// </summary>
-        public string Iznos { get; }
+        public string Iznos { get; } = "000000000000000";
         /// <summary>
         /// Max length 30
         /// </summary>
-        public string PlatiteljPrvaLinija { get; }
+        public string PlatiteljPrvaLinija { get; } = "PLATITELJ";
         /// <summary>
         /// Max length 27
         /// </summary>
-        public string PlatiteljDrugaLinija { get; }
+        public string PlatiteljDrugaLinija { get; } = "PLATITELJ ADRESA";
         /// <summary>
         /// Max length 27
         /// </summary>
-        public string PlatiteljTrecaLinija { get; }
+        public string PlatiteljTrecaLinija { get; } = "PLATITELJ MJESTO";
         /// <summary>
         /// Max length 25
         /// </summary>
-        public string PrimateljPrvaLinija { get; }
+        public string PrimateljPrvaLinija { get; } = "PRIMATELJ";
         /// <summary>
         /// Max length 25
         /// </summary>
-        public string PrimateljDrugaLinija { get; }
+        public string PrimateljDrugaLinija { get; } = "PRIMATELJ ADRESA";
         /// <summary>
         /// Max length 27
         /// </summary>
-        public string PrimateljTrecaLinija { get; }
+        public string PrimateljTrecaLinija { get; } = "PRIMATELJ MJESTO";
         /// <summary>
         /// Max length 21
         /// </summary>
-        public string PrimateljIBAN { get; }
+        public string PrimateljIBAN { get; } = "HR0000000000000000000";
         /// <summary>
         /// Max length 4
         /// </summary>
-        public string Model { get; }
+        public string Model { get; } = "HR99";
         /// <summary>
         /// Max length 22
         /// </summary>
-        public string PozivNaBroj { get; }
+        public string PozivNaBroj { get; } = "000000";
         /// <summary>
         /// Max length 4
         /// </summary>
-        public string SifraNamjene { get; }
+        public string SifraNamjene { get; } = "COST";
         /// <summary>
         /// Max length 35
         /// </summary>
-        public string Opis { get; }
+        public string Opis { get; } = "Troškovi";
         #endregion
-
-        public Hub3a (string text) {
+        public Hub3a () {
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new FontResolver ();
-            this.barCodeText = text;
+        }
+        public Hub3a (string barCodeText) : this () {
 
-            string[] t = text.Split ('\n', StringSplitOptions.RemoveEmptyEntries);
+            string[] t = barCodeText.Split ('\n', StringSplitOptions.RemoveEmptyEntries);
             Zaglavlje = $"{t[0]}";
             ValutaPlacanja = $"{t[1]}";
             Iznos = $"{t[2]}";
@@ -93,12 +93,23 @@ namespace ConsoleApp {
             PozivNaBroj = $"{t[11]}";
             SifraNamjene = $"{t[12]}";
             Opis = $"{t[13]}";
+        }
+        public string GetBarCodeText () {
 
-            //// convert them into unicode bytes.
-            //byte[] unicodeBytes = Encoding.Convert(Encoding.Default, Encoding.Unicode, Encoding.Default.GetBytes(PlatiteljPrvaLinija));
-
-            //// builds the converted string.
-            //PlatiteljPrvaLinija = Encoding.Unicode.GetString(unicodeBytes);
+            return Zaglavlje + "\n" +
+                ValutaPlacanja + "\n" +
+                Iznos + "\n" +
+                PlatiteljPrvaLinija + "\n" +
+                PlatiteljDrugaLinija + "\n" +
+                PlatiteljTrecaLinija + "\n" +
+                PrimateljPrvaLinija + "\n" +
+                PrimateljDrugaLinija + "\n" +
+                PrimateljTrecaLinija + "\n" +
+                PrimateljIBAN + "\n" +
+                Model + "\n" +
+                PozivNaBroj + "\n" +
+                SifraNamjene + "\n" +
+                Opis + "\n";
         }
         public void DajPDFUplatnicu (string pdfFilePath) {
             if (System.IO.File.Exists (pdfFilePath))
@@ -113,12 +124,12 @@ namespace ConsoleApp {
             Stream ret = new MemoryStream ();
 
             //File dimentions - Width = 17 inches, Height - 11 inches (Tabloid Format)
-            PdfDocument pdfDocument = PdfReader.Open(@"Pdf/hub-3a.pdf", PdfDocumentOpenMode.Modify);
+            PdfDocument pdfDocument = PdfReader.Open (@"Pdf/hub-3a.pdf", PdfDocumentOpenMode.Modify);
 
             PdfPage page = pdfDocument.Pages[0];
 
             var gfx = XGraphics.FromPdfPage (page);
-            XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.Unicode);
+            XPdfFontOptions options = new XPdfFontOptions (PdfFontEncoding.Unicode);
             // no options to embed fonts in PDFSharpCore, seems to work automaticallz
 
             var font = new XFont ("OpenSans", 10, XFontStyle.Bold, options);
@@ -194,82 +205,23 @@ namespace ConsoleApp {
         }
         public Stream DajBarKodPNG () {
             Stream ret = new MemoryStream ();
-            int aspectRatio = 3;
-            int paddingLeftRight = 0;
-            int paddingTopBottom = 0;
-            Pdf417Generator generator = new Pdf417Generator (this.barCodeText, ErrorCorrectionLevel.LevelFour, aspectRatio, paddingLeftRight, paddingTopBottom);
-            Barcode barcode = generator.Encode ();
-
             //Širina barkoda iznosi 58 mm. Visina barkoda ovisi o koliĉini i
             //vrsti podataka, ali ne smije biti veća od 26 mm(sa podruĉjima tišine).
             int dpi = 150;
             double inchesW = 5.8 * 2.54;
-            //           double inchesH = 1.2 * 2.54;
-            var imgW = inchesW * dpi;
-            var imgH = imgW * ((double) barcode.Rows / (double) barcode.Columns);
+            int imgW = Convert.ToInt32 (inchesW * dpi);
+            int imgH = imgW / 3;
+
+            var pixelData = DajBarKodPixelData (imgW, imgH);
 
             var bgColor = SixLabors.ImageSharp.PixelFormats.Rgba32.ParseHex ("#FFFFFF");
 
-            using (var image = new Image<SixLabors.ImageSharp.PixelFormats.Rgba32> (
-                Convert.ToInt32 (imgW),
-                Convert.ToInt32 (imgH),
-                bgColor)) {
-                image.Metadata.HorizontalResolution = dpi;
-                image.Metadata.VerticalResolution = dpi;
+            var image = Image.LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32> (pixelData.Pixels, imgW, imgH);
 
-                image.Mutate (imageContext => {
-
-                    // BarCode
-                    int bw = Convert.ToInt32 (imgW) / barcode.Columns;
-                    int bh = Convert.ToInt32 (imgH) / barcode.Rows;
-
-                    int y = 0;
-                    for (int r = 0; r < barcode.Rows; ++r) {
-                        int x = 0;
-                        for (int c = 0; c < barcode.Columns; ++c) {
-                            if (barcode.RawData[r][c] == 1) {
-
-                                // image.Get
-                                //// e.Graphics.FillRectangle(Brushes.Black, x, y, bw, bh);
-
-                                var points = new PointF[4];
-                                points[0] = new PointF (
-                                    x: x,
-                                    y: y);
-                                points[1] = new PointF (
-                                    x: (float) (x + bw),
-                                    y: (float) (y));
-                                points[2] = new PointF (
-                                    x: (float) (x + bw),
-                                    y: (float) (y + bh));
-                                points[3] = new PointF (
-                                    x: (float) (x),
-                                    y: (float) (y + bh));
-
-                                // create a pen unique to this line
-                                var lineColor = SixLabors.ImageSharp.Color.Black;
-                                float lineWidth = bw;
-                                var linePen = new Pen (lineColor, lineWidth);
-                                linePen.JointStyle = JointStyle.Square;
-                                linePen.EndCapStyle = EndCapStyle.Square;
-
-                                // draw the line
-                                imageContext.FillPolygon (lineColor, points);
-                            }
-                            x += bw;
-                        }
-                        y += bh;
-                    }
-
-                    // -------
-
-                });
-
-                image.SaveAsPng (ret, new PngEncoder () {
-                    BitDepth = PngBitDepth.Bit1,
-                        ColorType = PngColorType.Grayscale
-                });
-            }
+            image.SaveAsPng (ret, new PngEncoder () {
+                BitDepth = PngBitDepth.Bit1,
+                    ColorType = PngColorType.Grayscale
+            });
 
             return ret;
         }
@@ -280,6 +232,46 @@ namespace ConsoleApp {
             using (FileStream outputFileStream = new FileStream (barCodePNGFilePath, FileMode.Create)) {
                 DajBarKodPNG ().CopyTo (outputFileStream);
             }
+        }
+        public ZXing.Rendering.PixelData DajBarKodPixelData (int imgW, int imgH) {
+
+            var barcodeWriterPixelData = new ZXing.BarcodeWriterPixelData {
+                Format = BarcodeFormat.PDF_417,
+                Options = new EncodingOptions {
+                Height = imgH,
+                Width = imgW,
+
+                },
+                Renderer = new PixelDataRenderer {
+                Foreground = new PixelDataRenderer.Color (unchecked ((int) 0xFF000000)),
+                Background = new PixelDataRenderer.Color (unchecked ((int) 0xFFFFFFFF)),
+
+                }
+            };
+            barcodeWriterPixelData.Options.Hints[EncodeHintType.ERROR_CORRECTION] = ERROR_CORRECTION_LEVEL;
+            return barcodeWriterPixelData.Write (GetBarCodeText ());
+
+        }
+        public string DajBarKodSVG () {
+            //Širina barkoda iznosi 58 mm. Visina barkoda ovisi o koliĉini i
+            //vrsti podataka, ali ne smije biti veća od 26 mm(sa podruĉjima tišine).
+            int dpi = 150;
+            double inchesW = 5.8 * 2.54;
+            int imgW = Convert.ToInt32 (inchesW * dpi);
+            int imgH = imgW / 3;
+
+            var barcodeWriter = new ZXing.BarcodeWriterSvg {
+                Format = BarcodeFormat.PDF_417,
+                Options = new EncodingOptions {
+                Height = imgH,
+                Width = imgW
+                }
+            };
+            barcodeWriter.Options.Hints[EncodeHintType.ERROR_CORRECTION] = ERROR_CORRECTION_LEVEL;
+            ZXing.Rendering.SvgRenderer.SvgImage ret = barcodeWriter.Write (GetBarCodeText ());
+
+            return ret.Content;
+
         }
     }
 }
