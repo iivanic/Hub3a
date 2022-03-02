@@ -6,6 +6,7 @@
 test.pdf
 test.png 
 test.svg
+.DS_Store
 
 # User-specific files
 *.rsuser
