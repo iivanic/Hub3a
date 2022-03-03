@@ -20,62 +20,77 @@ namespace Hub3a {
         /// <summary>
         /// Max length 8
         /// </summary>
-        public string Zaglavlje { get; } = "HRVHUB30";
+        public string Zaglavlje { get; set; } = "HRVHUB30";
         /// <summary>
         /// Max length 3
         /// </summary>
-        public string ValutaPlacanja { get; } = "HRK";
+        public string ValutaPlacanja { get; set; } = "HRK";
         /// <summary>
         /// Max length 15
         /// </summary>
-        public string Iznos { get; } = "000000000000000";
+        private string iznos;
+        public string Iznos {
+            get {
+                return iznos;
+            }
+            set {
+                iznos = value;
+                if (!string.IsNullOrEmpty (iznos)) {
+                    if (iznos.Length < 15)
+                        iznos = iznos.PadLeft (15, '0');
+                    if (iznos.Length > 15)
+                        iznos = iznos.Substring (iznos.Length - 15);
+                }
+            }
+        } 
         /// <summary>
         /// Max length 30
         /// </summary>
-        public string PlatiteljPrvaLinija { get; } = "PLATITELJ";
+        public string PlatiteljPrvaLinija { get; set; } = "PLATITELJ";
         /// <summary>
         /// Max length 27
         /// </summary>
-        public string PlatiteljDrugaLinija { get; } = "PLATITELJ ADRESA";
+        public string PlatiteljDrugaLinija { get; set; } = "PLATITELJ ADRESA";
         /// <summary>
         /// Max length 27
         /// </summary>
-        public string PlatiteljTrecaLinija { get; } = "PLATITELJ MJESTO";
+        public string PlatiteljTrecaLinija { get; set; } = "PLATITELJ MJESTO";
         /// <summary>
         /// Max length 25
         /// </summary>
-        public string PrimateljPrvaLinija { get; } = "PRIMATELJ";
+        public string PrimateljPrvaLinija { get; set; } = "PRIMATELJ";
         /// <summary>
         /// Max length 25
         /// </summary>
-        public string PrimateljDrugaLinija { get; } = "PRIMATELJ ADRESA";
+        public string PrimateljDrugaLinija { get; set; } = "PRIMATELJ ADRESA";
         /// <summary>
         /// Max length 27
         /// </summary>
-        public string PrimateljTrecaLinija { get; } = "PRIMATELJ MJESTO";
+        public string PrimateljTrecaLinija { get; set; } = "PRIMATELJ MJESTO";
         /// <summary>
         /// Max length 21
         /// </summary>
-        public string PrimateljIBAN { get; } = "HR0000000000000000000";
+        public string PrimateljIBAN { get; set; } = "HR0000000000000000000";
         /// <summary>
         /// Max length 4
         /// </summary>
-        public string Model { get; } = "HR99";
+        public string Model { get; set; } = "HR99";
         /// <summary>
         /// Max length 22
         /// </summary>
-        public string PozivNaBroj { get; } = "000000";
+        public string PozivNaBroj { get; set; } = "000000";
         /// <summary>
         /// Max length 4
         /// </summary>
-        public string SifraNamjene { get; } = "COST";
+        public string SifraNamjene { get; set; } = "COST";
         /// <summary>
         /// Max length 35
         /// </summary>
-        public string Opis { get; } = "Troškovi";
+        public string Opis { get; set; } = "Troškovi";
         #endregion
         public Hub3a () {
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new FontResolver ();
+            iznos= "000000000000000";
         }
         public Hub3a (string barCodeText) : this () {
 
@@ -222,7 +237,7 @@ namespace Hub3a {
 
             var bgColor = SixLabors.ImageSharp.PixelFormats.Rgba32.ParseHex ("#FFFFFF");
 
-            var image = Image.LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32> (pixelData.Pixels, imgW, imgH);
+            var image = Image.LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32> (pixelData.Pixels, pixelData.Width, pixelData.Height);
 
             image.SaveAsPng (ret, new PngEncoder () {
                 BitDepth = PngBitDepth.Bit1,
@@ -233,10 +248,10 @@ namespace Hub3a {
         }
         public async void DajBarKodPNG (string barCodePNGFilePath) {
             if (System.IO.File.Exists (barCodePNGFilePath))
-             System.IO.File.Delete (barCodePNGFilePath);
+                System.IO.File.Delete (barCodePNGFilePath);
 
             using (FileStream outputFileStream = new FileStream (barCodePNGFilePath, FileMode.Create)) {
-               await DajBarKodPNG ().CopyToAsync (outputFileStream);
+                await DajBarKodPNG ().CopyToAsync (outputFileStream);
             }
         }
         public ZXing.Rendering.PixelData DajBarKodPixelData (int imgW, int imgH) {
