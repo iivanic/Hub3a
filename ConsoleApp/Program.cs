@@ -66,7 +66,6 @@ static void openFile(string filename)
             (var process = Process.Start(
                 new ProcessStartInfo
                 {
-                  //  FileName = "start",
                     FileName = filename,
                     UseShellExecute=true
                 }))
