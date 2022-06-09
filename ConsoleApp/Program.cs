@@ -32,7 +32,7 @@ string fileName = "test.svg";
 hub.DajBarKodSVG(fileName);
 openFile(fileName);
 
-fileName = "test.png1";
+fileName = "test.png";
 hub.DajBarKodPNG(fileName);
 openFile(fileName);
 
